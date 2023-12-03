@@ -40,7 +40,9 @@ admin.initializeApp({
 
 // middlewares
 server.use(express.json()); // enable JSON sharing 
-server.use(cors());
+server.use(cors({
+    origin: "https://serverfora11-1qkn.vercel.app",
+}));
 
 // AWS setup
 
