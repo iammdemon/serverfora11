@@ -17,6 +17,7 @@ import Notification from './Schema/Notification.js';
 import Comment from './Schema/Comment.js';
 
 const server = express();
+
 const PORT = process.env.PORT || 3000;
 const slatRounds = 10; // slat rounds for bcryptjs
 
