@@ -15,6 +15,10 @@ import User from './Schema/User.js';
 import Blog from './Schema/Blog.js';
 import Notification from './Schema/Notification.js';
 import Comment from './Schema/Comment.js';
+const express = require("express");
+const cors = require("cors");
+
+
 
 const server = express();
 
@@ -39,8 +43,9 @@ admin.initializeApp({
 
 // middlewares
 server.use(express.json()); // enable JSON sharing 
+
 server.use(cors({
-    origin: "https://serverfora11-1qkn.vercel.app",
+    origin: "*",
 }));
 
 // AWS setup
@@ -143,7 +148,7 @@ server.get('/get-upload-url', (req, res) => {
     })
 })
 
-server.post('https://serverfora11-1qkn.vercel.app/signup', (req, res) => {
+server.post('/signup', (req, res) => {
 
     let { fullname, email, password } = req.body;
 
@@ -191,7 +196,7 @@ server.post('https://serverfora11-1qkn.vercel.app/signup', (req, res) => {
 
 })
 
-server.post('https://serverfora11-1qkn.vercel.app/signin', (req, res) => {
+server.post('/signin', (req, res) => {
 
     let { email, password } = req.body;
 
@@ -225,7 +230,7 @@ server.post('https://serverfora11-1qkn.vercel.app/signin', (req, res) => {
 
 })
 
-server.post('https://serverfora11-1qkn.vercel.app/google-auth', async (req, res) => {
+server.post('/google-auth', async (req, res) => {
     
     let { accessToken } = req.body;
 
@@ -277,7 +282,7 @@ server.post('https://serverfora11-1qkn.vercel.app/google-auth', async (req, res)
     });
 })
 
-server.post('https://serverfora11-1qkn.vercel.app/update-profile-img', verifyJWT, (req, res) => {
+server.post('/update-profile-img', verifyJWT, (req, res) => {
 
     let { url } = req.body;
 
@@ -291,7 +296,7 @@ server.post('https://serverfora11-1qkn.vercel.app/update-profile-img', verifyJWT
 
 })
 
-server.post('https://serverfora11-1qkn.vercel.app/update-profile', verifyJWT, (req, res) => {
+server.post('/update-profile', verifyJWT, (req, res) => {
 
     let { username, bio, social_links } = req.body;
 
@@ -340,7 +345,7 @@ server.post('https://serverfora11-1qkn.vercel.app/update-profile', verifyJWT, (r
 
 })
 
-server.post('https://serverfora11-1qkn.vercel.app/get-profile', (req, res) => {
+server.post('/get-profile', (req, res) => {
 
     let { username } = req.body;
 
@@ -356,7 +361,7 @@ server.post('https://serverfora11-1qkn.vercel.app/get-profile', (req, res) => {
 
 })
 
-server.post("https://serverfora11-1qkn.vercel.app/change-password", verifyJWT, (req, res) => {
+server.post("/change-password", verifyJWT, (req, res) => {
     
     let { currentPassword, newPassword } = req.body;
 
@@ -405,7 +410,7 @@ server.post("https://serverfora11-1qkn.vercel.app/change-password", verifyJWT, (
 
 // Blog routes
 
-server.post("https://serverfora11-1qkn.vercel.app/create-blog", verifyJWT, (req, res) => {
+server.post("/create-blog", verifyJWT, (req, res) => {
 
     let authorId = req.user;
 
@@ -467,7 +472,7 @@ server.post("https://serverfora11-1qkn.vercel.app/create-blog", verifyJWT, (req,
 })
 
 // done 
-server.post("https://serverfora11-1qkn.vercel.app/search-blogs", (req, res) => {
+server.post("/search-blogs", (req, res) => {
 
     let { query, tag, page, author, limit, eliminate_blog } = req.body;
 
@@ -502,7 +507,7 @@ server.post("https://serverfora11-1qkn.vercel.app/search-blogs", (req, res) => {
 })
 
 // done 
-server.post("https://serverfora11-1qkn.vercel.app/search-blogs-count", (req, res) => {
+server.post("/search-blogs-count", (req, res) => {
 
     let { query, tag, author } = req.body;
 
@@ -530,7 +535,7 @@ server.post("https://serverfora11-1qkn.vercel.app/search-blogs-count", (req, res
 })
 
 // done
-server.post("https://serverfora11-1qkn.vercel.app/search-users", (req, res) => {
+server.post("/search-users", (req, res) => {
 
     let { query } = req.body;
 
@@ -548,7 +553,7 @@ server.post("https://serverfora11-1qkn.vercel.app/search-users", (req, res) => {
 })
 
 // done
-server.get("https://serverfora11-1qkn.vercel.app/trending-blogs", (req, res) => {
+server.get("/trending-blogs", (req, res) => {
 
     Blog.find({ draft: false })
     .populate("author", "personal_info.profile_img personal_info.fullname personal_info.username -_id")
@@ -565,7 +570,7 @@ server.get("https://serverfora11-1qkn.vercel.app/trending-blogs", (req, res) => 
 })
 
 // done
-server.post("https://serverfora11-1qkn.vercel.app/latest-blogs", (req, res) => {
+server.post("/latest-blogs", (req, res) => {
 
     let { page } = req.body;
 
@@ -587,7 +592,7 @@ server.post("https://serverfora11-1qkn.vercel.app/latest-blogs", (req, res) => {
 })
 
 // done
-server.post("https://serverfora11-1qkn.vercel.app/all-latest-blogs-count", (req, res) => {
+server.post("/all-latest-blogs-count", (req, res) => {
     Blog.countDocuments({ draft: false })
     .then(count => {
         return res.status(200).json({ totalDocs: count })
@@ -629,7 +634,7 @@ server.post("/get-blog", (req, res) => {
 
 })
 
-server.post("https://serverfora11-1qkn.vercel.app/like-blog", verifyJWT, (req, res) => {
+server.post("/like-blog", verifyJWT, (req, res) => {
     
     let user_id = req.user;
 
@@ -669,7 +674,7 @@ server.post("https://serverfora11-1qkn.vercel.app/like-blog", verifyJWT, (req, r
 
 })
 
-server.post("https://serverfora11-1qkn.vercel.app/isliked-by-user", verifyJWT, (req, res) => {
+server.post("/isliked-by-user", verifyJWT, (req, res) => {
     let user_id = req.user;
     let { blog_id } = req.body;
 
@@ -743,7 +748,7 @@ server.post('/add-comment', verifyJWT, (req, res) => {
 
 })
 
-server.post('https://serverfora11-1qkn.vercel.app/get-blog-comments', (req, res) => {
+server.post('/get-blog-comments', (req, res) => {
 
     let { blog_id, skip } = req.body;
     let maxLimit = 5;
@@ -765,7 +770,7 @@ server.post('https://serverfora11-1qkn.vercel.app/get-blog-comments', (req, res)
 
 })
 
-server.post('https://serverfora11-1qkn.vercel.app/get-blog-comments-count', (req, res) => {
+server.post('/get-blog-comments-count', (req, res) => {
 
     let { blog_id } = req.body;
 
@@ -801,7 +806,7 @@ server.post('https://serverfora11-1qkn.vercel.app/get-blog-comments-count', (req
 //     })
 // })
 
-server.post('https://serverfora11-1qkn.vercel.app/get-replies', (req, res) => {
+server.post('/get-replies', (req, res) => {
 
     let { _id, skip } = req.body;
 
@@ -831,7 +836,7 @@ server.post('https://serverfora11-1qkn.vercel.app/get-replies', (req, res) => {
 
 })
 
-server.post("https://serverfora11-1qkn.vercel.app/delete-comment", verifyJWT, (req, res) => {
+server.post("/delete-comment", verifyJWT, (req, res) => {
 
     let user_id = req.user;
 
@@ -859,7 +864,7 @@ server.post("https://serverfora11-1qkn.vercel.app/delete-comment", verifyJWT, (r
     })
 })
 
-server.get("https://serverfora11-1qkn.vercel.app/account-info", verifyJWT, (req, res) => {
+server.get("/account-info", verifyJWT, (req, res) => {
     let user_id = req.user;
 
     User.findOne({ _id: user_id })
@@ -873,7 +878,7 @@ server.get("https://serverfora11-1qkn.vercel.app/account-info", verifyJWT, (req,
 })
 
 // done
-server.post("https://serverfora11-1qkn.vercel.app/user-written-blogs", verifyJWT, (req, res) => {
+server.post("/user-written-blogs", verifyJWT, (req, res) => {
 
     let user_id = req.user;
     let { page, draft, query, deletedDocCount } = req.body;
@@ -900,7 +905,7 @@ server.post("https://serverfora11-1qkn.vercel.app/user-written-blogs", verifyJWT
 })
 
 // done
-server.post("https://serverfora11-1qkn.vercel.app/user-written-blogs-count", verifyJWT, (req, res) => {
+server.post("/user-written-blogs-count", verifyJWT, (req, res) => {
 
     let user_id = req.user;
 
@@ -917,7 +922,7 @@ server.post("https://serverfora11-1qkn.vercel.app/user-written-blogs-count", ver
 
 })
 
-server.post("https://serverfora11-1qkn.vercel.app/delete-blog", verifyJWT, (req, res) => {
+server.post("/delete-blog", verifyJWT, (req, res) => {
     let user_id = req.user;
     let { blog_id } = req.body;
 
@@ -939,7 +944,7 @@ server.post("https://serverfora11-1qkn.vercel.app/delete-blog", verifyJWT, (req,
 })
 
 // done
-server.get("https://serverfora11-1qkn.vercel.app/new-notifications", verifyJWT, (req, res) => {
+server.get("/new-notifications", verifyJWT, (req, res) => {
     let user_id = req.user;
 
     Notification.exists({ notification_for: user_id, seen: false, user: { $ne: user_id } })
@@ -958,7 +963,7 @@ server.get("https://serverfora11-1qkn.vercel.app/new-notifications", verifyJWT, 
 })
 
 // done
-server.post("https://serverfora11-1qkn.vercel.app/notifications", verifyJWT, (req, res) => {
+server.post("/notifications", verifyJWT, (req, res) => {
     let user_id = req.user;
 
     let { page, filter, deletedDocCount } = req.body;
@@ -1003,7 +1008,7 @@ server.post("https://serverfora11-1qkn.vercel.app/notifications", verifyJWT, (re
 })
 
 // done
-server.post("https://serverfora11-1qkn.vercel.app/all-notification-count", verifyJWT, (req, res) => {
+server.post("/all-notification-count", verifyJWT, (req, res) => {
 
     let user_id = req.user;
 
