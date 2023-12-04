@@ -15,8 +15,6 @@ import User from './Schema/User.js';
 import Blog from './Schema/Blog.js';
 import Notification from './Schema/Notification.js';
 import Comment from './Schema/Comment.js';
-const express = require("express");
-const cors = require("cors");
 
 
 
@@ -42,11 +40,15 @@ admin.initializeApp({
 });
 
 // middlewares
-server.use(express.json()); // enable JSON sharing 
+const corsOptions ={
+    origin:'*', 
+    credentials:true,
+    optionSuccessStatus:200,
+  }
 
-server.use(cors({
-    origin: "*",
-}));
+  server.use(cors(corsOptions));
+
+server.use(express.json());
 
 // AWS setup
 
